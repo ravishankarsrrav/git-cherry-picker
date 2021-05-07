@@ -1,8 +1,9 @@
 package main
 
 import (
-	"./pkg/git"
 	"fmt"
+	"github.com/ravishankarsrrav/git-cherry-picker/pkg/git"
+	"github.com/ravishankarsrrav/git-cherry-picker/pkg/ui"
 	flag "github.com/spf13/pflag"
 )
 
@@ -11,17 +12,22 @@ var toBranch string
 
 func main() {
 	flag.StringVar(&fromBranch, "from_branch", "", "name of the branch from which the commit is cherry picked")
-	flag.StringVar(&toBranch, "to_branch", "", "name of the branch to which the commit is cherry picked")
-	if fromBranch == "" {
-		fmt.Println("fromBranch should be provided")
-	}
+	flag.StringVar(&toBranch, "to_branch", "main", "name of the branch to which the commit is cherry picked")
+	flag.Parse()
 	if toBranch == "" {
 		fmt.Println("toBranch should be provided")
 	}
 	var gitHelper = git.GitHelper{FromBranch: fromBranch, ToBranch: toBranch}
-	err := gitHelper.CheckOut()
+	/*err := gitHelper.CheckOut()
+	if err != nil {
+		fmt.Printf("checkout failed %s\n", err.Error())
+	}*/
+	commits, err := gitHelper.ListCommits()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	flag.Parse()
+	fmt.Println(commits)
+	selectedElement := ui.Draw(commits)
+	print(selectedElement)
+
 }
