@@ -6,12 +6,12 @@ type Helper interface {
 	CheckOut()
 }
 
-type helper struct {
-	fromBranch string
-	toBranch   string
+type GitHelper struct {
+	FromBranch string
+	ToBranch   string
 }
 
-func (h helper) CheckOut() error {
-	_, err := exec.Command("git", "checkout", h.toBranch).Output()
+func (h *GitHelper) CheckOut() error {
+	_, err := exec.Command("git", "checkout", h.ToBranch).Output()
 	return err
 }
