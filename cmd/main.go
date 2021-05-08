@@ -16,7 +16,7 @@ var continueCP bool
 func main() {
 	flag.StringVar(&fromBranch, "from_branch", "", "Name of the branch from which the commit is cherry picked")
 	flag.StringVar(&toBranch, "to_branch", "", "Name of the branch to which the commit is cherry picked. (Use this only when you are on different branch)")
-	flag.BoolVar(&continueCP, "continue", false, "Flag to continue cherry pick after the merge conflict is resolved")
+	flag.BoolVar(&continueCP, "continue", false, "Flag to continue cherry pick after the merge conflict is resolved. set true to continue cherry pick process")
 	flag.Parse()
 	color.HiGreen("gcpk tool lets you easily cherry-pick the commit with an easy terminal interface 🙌")
 	color.HiBlue("Usage \n")
@@ -24,7 +24,7 @@ func main() {
 	color.HiBlue("Flags:")
 	color.HiBlue("       --from_branch   Name of the branch from which the commit is cherry picked")
 	color.HiBlue("       --to_branch     Name of the branch to which the commit is cherry picked. (Use this only when you are on different branch)")
-	color.HiBlue("       --continue      Flag to continue cherry pick after the merge conflict is resolved \n")
+	color.HiBlue("       --continue      Flag to continue cherry pick after the merge conflict is resolved. set true to continue cherry pick process \n")
 	color.HiBlue("Use 'gcpk --help' for more information about the flags")
 	color.HiBlue("Support: If you have any questions, file an issue at https://github.com/ravishankarsrrav/git-cherry-picker/issues/new")
 	color.HiBlue(": If you are using it, star a github repo at https://github.com/ravishankarsrrav/git-cherry-picker \n\n\n")

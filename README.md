@@ -16,7 +16,7 @@ gcpk [flags]
 Flags:
      --from_branch   Name of the branch from which the commit is cherry picked
      --to_branch     Name of the branch to which the commit is cherry picked. (Use this only when you are on different branch)
-     --continue        Flag to continue cherry pick after the merge conflict is resolved
+     --continue      Flag to continue cherry pick after the merge conflict is resolved. set true to continue cherry pick process
 
  Use "gcpk --help" for more information about a flags.
 ```
