@@ -21,6 +21,10 @@ Flags:
  Use "gcpk --help" for more information about a flags.
 ```
 
+## Install
+clone the repository and run the `install.sh` file 
+
+
 ## Support
 If you have any questions, [file an issue](https://github.com/ravishankarsrrav/git-cherry-picker/issues/new)
 
