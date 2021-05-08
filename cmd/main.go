@@ -27,7 +27,9 @@ func main() {
 		err = gitHelper.Continue()
 		if err != nil {
 			color.Red("Unable to continue the cherry-pick process.")
+			return
 		}
+		color.HiYellow("Cherry pick process is completed!")
 		return
 	}
 
@@ -74,6 +76,8 @@ func main() {
 	err = gitHelper.CherryPick(commitID)
 	if err != nil {
 		color.Red("Cherry Pick Failed!")
+		return
 	}
+	color.HiGreen("Cherry pick is done!")
 	return
 }
