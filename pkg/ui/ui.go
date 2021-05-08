@@ -15,7 +15,7 @@ func Draw(items []string) int {
 	var row int
 
 	l := widgets.NewList()
-	l.Title = "Commits (Press enter to select the commit)"
+	l.Title = "Commits (Press enter to select the commit or q to exit)"
 	l.Rows = items
 	l.TextStyle = ui.NewStyle(ui.ColorBlue)
 	l.SelectedRowStyle = ui.NewStyle(ui.ColorGreen)
