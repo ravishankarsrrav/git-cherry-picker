@@ -1,7 +1,6 @@
 package git
 
 import (
-	"fmt"
 	"github.com/fatih/color"
 	"os/exec"
 	"strings"
@@ -24,7 +23,7 @@ type GitHelper struct {
 func (h *GitHelper) CheckOut() error {
 	out, err := exec.Command("git", "checkout", h.ToBranch).CombinedOutput()
 	if err != nil {
-		fmt.Println(string(out))
+		color.HiYellow(string(out))
 	}
 	return err
 }
