@@ -2,32 +2,78 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/ravishankarsrrav/git-cherry-picker/pkg/git"
 	"github.com/ravishankarsrrav/git-cherry-picker/pkg/ui"
+	"github.com/ravishankarsrrav/git-cherry-picker/pkg/utils"
 	flag "github.com/spf13/pflag"
 )
 
 var fromBranch string
 var toBranch string
+var continueCP bool
 
 func main() {
-	flag.StringVar(&fromBranch, "from_branch", "", "name of the branch from which the commit is cherry picked")
-	flag.StringVar(&toBranch, "to_branch", "main", "name of the branch to which the commit is cherry picked")
+	flag.StringVar(&fromBranch, "from_branch", "", "Name of the branch from which the commit is cherry picked")
+	flag.StringVar(&toBranch, "to_branch", "main", "Name of the branch to which the commit is cherry picked. (Use this only when you are on different branch)")
+	flag.BoolVar(&continueCP, "continue", false, "Flag to continue cherry pick after the merge conflict is resolved")
 	flag.Parse()
-	if toBranch == "" {
-		fmt.Println("toBranch should be provided")
-	}
 	var gitHelper = git.GitHelper{FromBranch: fromBranch, ToBranch: toBranch}
-	/*err := gitHelper.CheckOut()
-	if err != nil {
-		fmt.Printf("checkout failed %s\n", err.Error())
-	}*/
-	commits, err := gitHelper.ListCommits()
-	if err != nil {
-		fmt.Println(err.Error())
+	if continueCP {
+		err := gitHelper.AddAllChanges()
+		if err != nil {
+			color.Red("Unable to all the changes.")
+		}
+		err = gitHelper.Continue()
+		if err != nil {
+			color.Red("Unable to continue the cherry-pick process.")
+		}
+		return
 	}
-	fmt.Println(commits)
-	selectedElement := ui.Draw(commits)
-	print(selectedElement)
 
+	if fromBranch == "" {
+		color.Red("from_branch flag is required.")
+		color.HiGreen("Please enter the branch from which the commit will be cherry picked?")
+		_, err := fmt.Scanf("%s", &fromBranch)
+		if err != nil {
+			color.Red(err.Error())
+		}
+		if fromBranch == "" {
+			color.Red("You cannot proceed without adding the from_branch")
+			return
+		}
+	}
+
+	gitHelper = git.GitHelper{FromBranch: fromBranch, ToBranch: toBranch}
+
+	// checkout to the branch
+	err := gitHelper.CheckOut()
+	if err != nil {
+		color.Red("checkout failed %s\n", err.Error())
+	}
+	// fetch all the commits
+	commits, _ := gitHelper.ListCommits()
+	// check if there are no commits in the branch
+	if len(commits) <= 0 {
+		color.Red("There are no commits in the %s branch.\n", fromBranch)
+		return
+	}
+	// render the list of the commits
+	selectedElement := ui.Draw(commits)
+
+	// Print help message if the commit message is unselected
+	if selectedElement == 0 {
+		color.Red("Commit message should be selected from the list to process cherry-pick.")
+		return
+	}
+
+	// extract the commit id
+	commitID := utils.ExtractCommitId(commits[selectedElement-1])
+
+	// cherry-pick the commit
+	err = gitHelper.CherryPick(commitID)
+	if err != nil {
+		color.Red("Cherry Pick Failed!")
+	}
+	return
 }

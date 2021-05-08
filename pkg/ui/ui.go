@@ -1,20 +1,18 @@
 package ui
 
 import (
-	"log"
-
+	"github.com/fatih/color"
 	ui "github.com/gizak/termui/v3"
 	"github.com/gizak/termui/v3/widgets"
 )
 
-// TODO:: Refactor this
-
+/*Draw function to draw the rectangle list of commits */
 func Draw(items []string) int {
 	if err := ui.Init(); err != nil {
-		log.Fatalf("failed to initialize termui: %v", err)
+		color.HiRed(err.Error())
 	}
 	defer ui.Close()
-	var  row int
+	var row int
 
 	l := widgets.NewList()
 	l.Title = "Commits (Press enter to select the commit)"
@@ -55,7 +53,7 @@ func Draw(items []string) int {
 		case "G", "<End>":
 			l.ScrollBottom()
 		case "<Enter>":
-			row = l.SelectedRow+1
+			row = l.SelectedRow + 1
 			return row
 		}
 
@@ -66,5 +64,4 @@ func Draw(items []string) int {
 		}
 		ui.Render(l)
 	}
-	return row
 }
