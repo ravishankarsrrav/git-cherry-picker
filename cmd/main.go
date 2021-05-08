@@ -15,7 +15,7 @@ var continueCP bool
 
 func main() {
 	flag.StringVar(&fromBranch, "from_branch", "", "Name of the branch from which the commit is cherry picked")
-	flag.StringVar(&toBranch, "to_branch", "main", "Name of the branch to which the commit is cherry picked. (Use this only when you are on different branch)")
+	flag.StringVar(&toBranch, "to_branch", "", "Name of the branch to which the commit is cherry picked. (Use this only when you are on different branch)")
 	flag.BoolVar(&continueCP, "continue", false, "Flag to continue cherry pick after the merge conflict is resolved")
 	flag.Parse()
 	var gitHelper = git.GitHelper{FromBranch: fromBranch, ToBranch: toBranch}
@@ -48,11 +48,14 @@ func main() {
 
 	gitHelper = git.GitHelper{FromBranch: fromBranch, ToBranch: toBranch}
 
-	// checkout to the branch
-	err := gitHelper.CheckOut()
-	if err != nil {
-		color.Red("checkout failed %s\n", err.Error())
+	if toBranch != "" {
+		// checkout to the branch
+		err := gitHelper.CheckOut()
+		if err != nil {
+			color.Red("checkout failed %s\n", err.Error())
+		}
 	}
+
 	// fetch all the commits
 	commits, _ := gitHelper.ListCommits()
 	// check if there are no commits in the branch
@@ -73,7 +76,7 @@ func main() {
 	commitID := utils.ExtractCommitId(commits[selectedElement-1])
 
 	// cherry-pick the commit
-	err = gitHelper.CherryPick(commitID)
+	err := gitHelper.CherryPick(commitID)
 	if err != nil {
 		color.Red("Cherry Pick Failed!")
 		return
