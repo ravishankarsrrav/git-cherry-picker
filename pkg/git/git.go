@@ -9,7 +9,10 @@ import (
 
 type Helper interface {
 	CheckOut()
+	ListCommits()
 	CherryPick()
+	AddAllChanges()
+	Continue()
 }
 
 type GitHelper struct {
